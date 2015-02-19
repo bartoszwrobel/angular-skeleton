@@ -1,6 +1,6 @@
-'use strict'; 
+'use strict';
 define([], function () {
-    function authManager(restManager, $state, $timeout, $rootScope, aclManager, $q) {
+    function authManager(restManager, $state, $timeout, $rootScope, $q) {
 
         var instance;
         if (instance) {
@@ -16,7 +16,6 @@ define([], function () {
             _permissions: null,
             setToken: function (token) {
                 this._token = token;
-                $rootScope.$broadcast('tokenChange', token);
             },
             getToken: function () {
                 return this._token;
@@ -28,33 +27,37 @@ define([], function () {
                 return this._permissions;
             },
             setUser: function (user) {
-                if (user == null) {
+                if (user === null) {
                     this._user = null;
                 } else {
-                    this._user = {
-                        id: user.id,
-                        name: user.name,
-                        isAdmin: user.hasOwnProperty('isAdmin') ? user.isAdmin : false,
-                        activeGroup: user.hasOwnProperty('activeGroup') ? user.activeGroup : '',
-                        avatar: user.avatar ? user.avatar : null
-                    };
+                    this._user = user;
                 }
                 $rootScope.loggedUser = this._user;
-                aclManager._user = user;
             },
             getUser: function () {
+                return {role: "administrator"};
                 return this._user;
+            },
+            isAuthorized: function (availableRoles) {
+                var deferred = $q.defer();
+                var user = this.getUser();
+                if (user !== null && user.role && $rootScope.inArray(availableRoles, user.role) !== false) {
+                    deferred.resolve();
+                } else {
+                    deferred.reject();
+                }
+                return deferred.promise;
             },
             isLogged: function () {
                 var deferred = $q.defer();
+
+                deferred.resolve(); // delete this line when is-logged request start works
                 if (this.getUser() !== null) {
                     deferred.resolve();
                 } else {
                     restManager.customGet('is-logged').then(function (result) {
                         if (result.success) {
-                            instance.setUser(result.user);
-                            aclManager.setPermissions(result.user.permissions);
-                            aclManager.makeAvailableModules();
+                            instance.setUser(result.identity);
                             $rootScope._isLogged = true;
                             deferred.resolve();
                         } else {
@@ -76,7 +79,7 @@ define([], function () {
                         $rootScope._isLogged = false;
                         $rootScope.$broadcast('logout');
 
-                        deferred.resolve(results.documents);
+                        deferred.resolve(results);
                         $timeout(function () {
                             $state.go('login');
                         });
@@ -87,8 +90,8 @@ define([], function () {
             login: function (login, password) {
                 restManager.customPost('application/auth/login', 'login=' + login + '&password=' + password, '', {}, {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}).then(function (result) {
                     if (result.success && result.success === true) {
-                        instance.setUser(result.user);
-                        aclManager.setPermissions(result.user.permissions);
+                        instance.setUser(result.token.identity);
+                        instance.setToken(result.token)
                         return true;
                     }
                     return false;
@@ -98,15 +101,11 @@ define([], function () {
             }
         };
 
-        $rootScope.$on('logout401', function () {
-            instance.logout();
-        });
-
         instance = new AuthManager();
         return instance;
     }
 
-    authManager.$inject = ['restManager', '$state', '$timeout', '$rootScope', 'aclManager', '$q'];
+    authManager.$inject = ['restManager', '$state', '$timeout', '$rootScope', '$q'];
 
     return authManager;
 });

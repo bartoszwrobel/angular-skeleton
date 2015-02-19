@@ -1,31 +1,46 @@
 'use strict';
 require.config({
-    baseUrl: '/',
+    baseUrl: './../../../../',
     waitSeconds: 0,
 //    urlArgs: "_dc=" + (new Date()).getTime(),
     paths: {
-        bootstrap: 'module/application/config/bootstrap',
-        domReady: 'vendor/requirejs-domready/domReady',
+        bootstrap: 'app/module/application/config/bootstrap',
         angular: 'vendor/angular/angular',
-        applicationConfig: 'module/application/config/config',
-        applicationController: 'module/application/controller/applicationController',
-        authConfig: 'module/auth/config/config',
-        authController: 'module/application/controller/authController',
-        'angular-route': 'vendor/angular-route/angular-route.min',
-        jquery: 'vendor/jquery/dist/jquery.min',
-        restangular: 'vendor/restangular/dist/restangular.min',
-        'ui-router': 'vendor/angular-ui-router/release/angular-ui-router.min',
+        // application module
+        applicationModule: 'app/module/application/ApplicationModule',
+        applicationConfig: 'app/module/application/config/config',
+        applicationController: 'app/module/application/controller/applicationController',
+        // application module
+        authModule: 'app/module/auth/AuthModule',
+        authConfig: 'app/module/auth/config/config',
+        authController: 'app/module/auth/controller/authController',
+        // home module
+        homeModule: 'app/module/home/homeModule',
+        homeConfig: 'app/module/home/config/config',
+        homeController: 'app/module/home/controller/homeController',
+        
+        'angular-route': 'vendor/angular-route/angular-route',
+        jquery: 'vendor/jquery/dist/jquery',
+        restangular: 'vendor/restangular/dist/restangular',
+        'ui-router': 'vendor/angular-ui-router/release/angular-ui-router',
         underscore: 'vendor/underscore/underscore',
-        registerManager: 'module/application/service/registerManager',
-        routeManager: 'module/application/service/routeManager',
-        liveDirective: 'module/application/directive/live'
+        authManager: 'app/module/application/service/authManager',
+        restManager: 'app/module/application/service/restManager',
+        registerManager: 'app/module/application/service/registerManager',
+        routeManager: 'app/module/application/service/routeManager',
+        liveDirective: 'app/module/application/directive/live',
+        //templates
+        templates: 'build/app/templates'
     },
     shim: {
         angular: {exports: 'angular'},
+        'templates': ['angular'],
         'angular-route': ['angular'],
         restangular: ['angular'],
         'ui-router': ['angular'],
-        application: ['angular']
+        'applicationModule': ['angular'],
+        'authModule': ['angular'],
+        'homeModule': ['angular']
     },
     priority: [
         'angular'

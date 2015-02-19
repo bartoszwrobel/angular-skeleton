@@ -1,6 +1,7 @@
 'use strict';
 
-require([], function () {
+define(['jquery'], function ($) {
+    
     function applicationController($rootScope, $scope, authManager) {
 
         $rootScope.preventDefault = function ($event) {
@@ -17,11 +18,11 @@ require([], function () {
             if (position === undefined) {
                 position = 'top-right';
             }
-            $('#notification').addClass(position).notify({
-                type: type,
-                message: {text: text},
-                fadeOut: {delay: duration}
-            }).show();
+//            $('#notification').addClass(position).notify({
+//                type: type,
+//                message: {text: text},
+//                fadeOut: {delay: duration}
+//            }).show();
         };
 
         $rootScope.inArray = function (array, value, key) {

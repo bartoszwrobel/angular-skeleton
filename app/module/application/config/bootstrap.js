@@ -1,13 +1,20 @@
-define([
-    'require',
+require([
+    //libralies
     'angular',
-    'application',
     'underscore',
     'angular-route',
     'restangular',
-    'ui-router'
-], function (require, angular) {
-    require(['domReady!'], function (document) {
-        angular.bootstrap(document, ['application']);
-    });
+    'ui-router',
+    //modules
+    'templates',
+    'applicationModule',
+    'authModule',
+    'homeModule'
+], function (angular) {
+        angular.bootstrap(document, [
+            'templates-main',
+            'applicationModule',
+            'authModule',
+            'homeModule'
+        ]);
 });

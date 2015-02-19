@@ -5,7 +5,6 @@ define([
     'authManager',
     'restManager',
     'underscore',
-    'aclManager',
     'liveDirective'
 ], function (
         angular,
@@ -23,6 +22,8 @@ define([
     application.constant("API", {
         "URL": APIurl
     });
+    
+    application.controller('applicationController', applicationController);
 
     application.config(applicationConfig);
 
@@ -31,7 +32,7 @@ define([
 
     application.directive('live', liveDirective);
 
-    application.controller('applicationController', applicationController);
+    
 
     application.run(['$rootScope', function ($rootScope) {
             $rootScope.APIurl = APIurl;

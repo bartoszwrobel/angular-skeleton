@@ -81,7 +81,6 @@ define([], function () {
                         });
                     } else {
                         $timeout(function () {
-                            $rootScope.$broadcast('logout401');
                             $location.state('login');
                         });
                     }

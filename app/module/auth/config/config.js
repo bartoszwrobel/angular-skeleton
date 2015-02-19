@@ -7,7 +7,7 @@ define([], function () {
             url: "/login",
             views: {
                 'content': {
-                    templateUrl: 'app/module/auth/view/templates/login.html',
+                    templateUrl: './app/module/auth/view/templates/login.html',
                     controller: 'authController'
                 }
             }
